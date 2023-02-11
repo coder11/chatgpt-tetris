@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/two.js@0.7.2/build/two.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: lightgray;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="canvas" style="background-color: white; width: fit-content; height: fit-content;"></div>
+    <script>
+        // Constants
+        const canvasWidth = 500;
+        const canvasHeight = 500;
+        const blockWidth = 25;
+        const blockHeight = 25;
+        const blockColor = '#FFA07A';
+        const blockStartX = canvasWidth / 2;
+        const blockStartY = canvasHeight / 2;
+        const fallSpeed = 100;
+        const fallStep = 5;
+        const moveStep = 5;
+
+        // Initialize Two.js
+        var elem = document.getElementById('canvas');
+        var params = { width: canvasWidth, height: canvasHeight };
+        var two = new Two(params).appendTo(elem);
+
+        // Create a rectangle
+        var rect = two.makeRectangle(blockStartX, blockStartY, blockWidth, blockHeight);
+        rect.fill = blockColor;
+        rect.stroke = blockColor;
+
+        // Add the rectangle to the scene
+        two.update();
+
+        // Move the rectangle down continuously
+        setInterval(function () {
+            rect.translation.y += fallStep;
+
+            // Check if the rectangle has hit the ground
+            if (rect.translation.y > canvasHeight - blockHeight) {
+                // Remove the rectangle from the scene
+                two.remove(rect);
+
+                // Create a new rectangle
+                rect = two.makeRectangle(blockStartX, blockStartY, blockWidth, blockHeight);
+                rect.fill = blockColor;
+                rect.stroke = blockColor;
+            }
+
+            two.update();
+        }, fallSpeed);
+
+        // Move the rectangle left or right when arrow keys are pressed
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'ArrowLeft') {
+                rect.translation.x -= moveStep;
+            } else if (event.key === 'ArrowRight') {
+                rect.translation.x += moveStep;
+            }
+            two.update();
+        });
+    </script>
+</body>
+
+</html>
